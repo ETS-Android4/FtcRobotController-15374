@@ -406,8 +406,6 @@ public class Steve extends LinearOpMode {
                 pattern = RevBlinkinLedDriver.BlinkinPattern.GOLD;
                 LED.setPattern(pattern);
 
-                init2();
-
                 display = telemetry.addData("Display Kind: ", displayKind.toString());
                 patternName = telemetry.addData("Pattern: ", pattern.toString());
             }
