@@ -142,6 +142,12 @@ public class ForwardBackUp extends LinearOpMode {
         ForwardBackUp.Arm initial = new ForwardBackUp.Arm("First");
         initial.moveArm(.73, .27);
 
+        iT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        iT.setTargetPosition(0);
+        iT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        iT.setTargetPosition(0);
+        iT.setPower(.1);
+
         aB.setPosition(1);
 
         boolean touch = tS.isPressed();

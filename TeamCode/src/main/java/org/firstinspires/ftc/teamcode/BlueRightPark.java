@@ -142,6 +142,12 @@ public class BlueRightPark extends LinearOpMode {
         BlueRightPark.Arm initial = new BlueRightPark.Arm("First");
         initial.moveArm(.73, .27);
 
+        iT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        iT.setTargetPosition(0);
+        iT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        iT.setTargetPosition(0);
+        iT.setPower(.1);
+
         aB.setPosition(1);
 
         boolean touch = tS.isPressed();
@@ -160,9 +166,11 @@ public class BlueRightPark extends LinearOpMode {
         Thread.sleep(200);
         Forward(300 , .4);
         Thread.sleep(200);
+        //1100 , 1300
         StrifeRight(1100 , .6);
         Thread.sleep(200);
         dM.setPower(.6);
+        //2800 3200
         Thread.sleep(2800);
         dM.setPower(0);
         Thread.sleep(200);
@@ -171,8 +179,10 @@ public class BlueRightPark extends LinearOpMode {
         Thread.sleep(200);
         TurnRight(440 , .4);
         Thread.sleep(200);
+        //800 1100
         StrifeRight(800 , .4);
         Thread.sleep(200);
+        //4800 5400
         Backward(4800 , .4);
         Thread.sleep(100);
 

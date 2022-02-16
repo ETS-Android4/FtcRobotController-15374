@@ -142,6 +142,12 @@ public class BlueRight extends LinearOpMode {
         BlueRight.Arm initial = new BlueRight.Arm("First");
         initial.moveArm(.73, .27);
 
+        iT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        iT.setTargetPosition(0);
+        iT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        iT.setTargetPosition(0);
+        iT.setPower(.1);
+
         aB.setPosition(1);
 
         boolean touch = tS.isPressed();
@@ -228,43 +234,9 @@ public class BlueRight extends LinearOpMode {
         }
         if (.7 < runTimer && runTimer < 1)
         {
-            StrifeLeft(1400 , .3);
+            StrifeLeft(1400, .3);
 
-            //Different
-//            Forward(1200 , .3);
-//
-//            StrifeRight(500 , .3);
-//
-//            //Different
-//            PlaceHigh();
         }
-
-//        Thread.sleep(5000);
-
-
-//        TurnLeft(750 , .3);
-//        Thread.sleep(100);
-//        Backward(800 , .3);
-//        Thread.sleep(100);
-//        StrifeRight(400 , .3);
-//        Thread.sleep(100);
-//        TurnRight(100 , .3);
-//        Thread.sleep(100);
-//        StrifeRight(200 , .3);
-//        Thread.sleep(100);
-
-
-//        TurnLeft(320 , .2);
-//        Thread.sleep(100);
-//        StrifeRight(930 , .3);
-//        Thread.sleep(100);
-//        Backward(100 , .2);
-//        Thread.sleep(100);
-//        StrifeRight(120 , .3);
-//        Thread.sleep(100);
-        //More
-//        Backward(40 , .2);
-//        Thread.sleep(100);
 
 
 

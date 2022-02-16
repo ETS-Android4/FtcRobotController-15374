@@ -171,12 +171,22 @@ public class Steve extends LinearOpMode {
 
             armLoop = false;
         }
+    }
 
-//        public void moveRail (int position)
-//        {
-//            .setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//            .setTargetPosition(position);
-//        }
+    public class Rail extends Thread{
+        private Thread t;
+        private String threadName;
+
+        Rail (String name){
+            threadName = name;
+            System.out.println("Creating" + threadName);
+        }
+
+        public void moveRail (int position , double power)
+        {
+            iT.setTargetPosition(position);
+            iT.setPower(.4);
+        }
     }
 
     public void runOpMode() throws InterruptedException{
@@ -204,13 +214,16 @@ public class Steve extends LinearOpMode {
 
         //Either or way
         potent = hardwareMap.analogInput.get("potent");
-//
-//        iT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//        //iT.setMode(DcMotor.RunMode.RESET_ENCODERS);
+
+        iT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        iT.setTargetPosition(0);
+        iT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        iT.setTargetPosition(0);
+        iT.setPower(.1);
 
         fR.setDirection(DcMotor.Direction.REVERSE);
         bR.setDirection(DcMotor.Direction.REVERSE);
-        iT.setDirection(DcMotor.Direction.REVERSE);
+//        iT.setDirection(DcMotor.Direction.REVERSE);
 
 
         telemetry.addData("Status" , "Initializd");
@@ -236,6 +249,11 @@ public class Steve extends LinearOpMode {
 
             telemetry.addLine("potent Voltage" + potent.getVoltage());
             telemetry.update();
+//
+//            iT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//            iT.setTargetPosition(0);
+//            iT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
 
             //Gamepad1
 
@@ -277,16 +295,22 @@ public class Steve extends LinearOpMode {
             //Reset button
             if (gamepad1.y)
             {
-                iT.setTargetPosition(0);
-                iT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                iT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                iT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                iT.setTargetPosition(-400);
-                iT.setPower(.4);
-
-                Thread.sleep(1000);
-
+                //-400 0
                 Arm movePlease = new Arm("First");
+                movePlease.moveArm(.4 , .6);
+
+                Thread.sleep(400);
+
+                telemetry.addData("Position" , iT.getCurrentPosition());
+
+                Rail moveR = new Rail("Second");
+                moveR.moveRail(0 , .4);
+
+//                iT.setTargetPosition(0);
+//                iT.setPower(.4);
+
+                Thread.sleep(400);
+
                 movePlease.moveArm(.73 , .27);
 
                 aB.setPosition(1);
@@ -308,14 +332,13 @@ public class Steve extends LinearOpMode {
 
                 aB.setPosition(.34);
 
-                Thread.sleep(600);
+                Thread.sleep(700);
 
-                iT.setTargetPosition(0);
-                iT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                iT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                iT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                iT.setTargetPosition(400);
-                iT.setPower(.4);
+                Rail moveR = new Rail("Second");
+                moveR.moveRail(400 , .4);
+
+//                iT.setTargetPosition(400);
+//                iT.setPower(.4);
 
                 telemetry.addData("iT position" , iT.getTargetPosition());
             }
@@ -336,14 +359,13 @@ public class Steve extends LinearOpMode {
 
                 aB.setPosition(.52);
 
-                Thread.sleep(600);
+                Thread.sleep(700);
 
-                iT.setTargetPosition(0);
-                iT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                iT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                iT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                iT.setTargetPosition(400);
-                iT.setPower(.4);
+                Rail moveR = new Rail("Second");
+                moveR.moveRail(400 , .4);
+
+//                iT.setTargetPosition(400);
+//                iT.setPower(.4);
 
                 telemetry.addData("iT position" , iT.getTargetPosition());
             }
@@ -360,14 +382,17 @@ public class Steve extends LinearOpMode {
 
                 aB.setPosition(.65);
 
-                Thread.sleep(600);
+                Thread.sleep(700);
 
-                iT.setTargetPosition(0);
-                iT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                iT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                iT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                iT.setTargetPosition(400);
-                iT.setPower(.4);
+                Rail moveR = new Rail("Second");
+                moveR.moveRail(400 , .4);
+
+//                iT.setTargetPosition(400);
+//                iT.setPower(.4);
+
+                Thread.sleep(400);
+
+                movePlease.moveArm(.5 , .5);
 
                 telemetry.addData("iT position" , iT.getTargetPosition());
             }

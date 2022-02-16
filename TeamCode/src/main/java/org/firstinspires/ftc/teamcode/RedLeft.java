@@ -71,6 +71,7 @@ public class RedLeft extends LinearOpMode {
     double position = .7;
     boolean armLoop = true;
     double runTimer = 0;
+    String level = "middle";
 
     // Since ImageTarget trackables use mm to specifiy their dimensions, we must use mm for all the physical dimension.
     // We will define some constants and conversions here
@@ -102,6 +103,22 @@ public class RedLeft extends LinearOpMode {
             a2.setPosition(arm2);
 
             armLoop = false;
+        }
+    }
+
+    public class Rail extends Thread{
+        private Thread t;
+        private String threadName;
+
+        Rail (String name){
+            threadName = name;
+            System.out.println("Creating" + threadName);
+        }
+
+        public void moveRail (int position , double power)
+        {
+            iT.setTargetPosition(position);
+            iT.setPower(.4);
         }
     }
 
@@ -143,6 +160,12 @@ public class RedLeft extends LinearOpMode {
         RedLeft.Arm initial = new RedLeft.Arm("First");
         initial.moveArm(.73, .27);
 
+        iT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        iT.setTargetPosition(0);
+        iT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        iT.setTargetPosition(0);
+        iT.setPower(.1);
+
         aB.setPosition(1);
 
         boolean touch = tS.isPressed();
@@ -152,147 +175,157 @@ public class RedLeft extends LinearOpMode {
         //failsafe for missing block
 
         //Towards Marker
-        Backward(570 , .3);
-        Thread.sleep(500);
+//        Backward(570 , .3);
 
         //Intake down
         hit.setPosition(1);
         Thread.sleep(500);
 
+        Forward(570 , .5);
+        Thread.sleep(500);
+
+        //Face Duck Spinner
+//        TurnLeft(   500 , .3);
+        //1350 sorta , 1300 , 1500 , 1450 , 1400
+        TurnRight(1400 , .5);
+        Thread.sleep(800);
+
         //To Duck Spinner
-        TurnLeft(   500 , .3);
-        Thread.sleep(1000);
-        StrifeRight(1100 , .6);
-        Thread.sleep(1000);
+        StrifeRight(1050 , .4);
+        Thread.sleep(400);
         dM.setPower(-.8);
-        Thread.sleep(2000);
+        Thread.sleep(2200);
         dM.setPower(0);
-        Thread.sleep(1000);
+        Thread.sleep(800);
 
         //Away from Duck Spinner
-        StrifeLeft(750 , .4);
-        Thread.sleep(1000);
-        TurnLeft(440 , .4);
-        Thread.sleep(1000);
-        //To wall
-        Backward(600 , .4);
-        Thread.sleep(1000);
+        StrifeLeft(750 , .5);
+        Thread.sleep(800);
+        TurnLeft(455 , .5);
+        Thread.sleep(800);
+
+        //Backward(600 , .4);
+        Forward(1800 , .5);
+        Thread.sleep(800);
 //        Forward(100 , .3);
 //        Thread.sleep(2000);
 
-        //Infront of marker
-        StrifeLeft(1000 , .4);
-        Thread.sleep(1000);
-//        Backward(90 , .4);
-//        Thread.sleep(100);
+//        StrifeLeft(1100 , .4);
+        TurnRight(920 , .5);
+        Thread.sleep(800);
 
-        //1 .37 , .37 , .37
-        //2 .6 , .6 , .6
-        //3 .8 , .8 , .8
+//        NoEncoders();
+//        resetStartTime();
+//        while (touch == false && tS.isPressed() == false) {
+//
+//            if (runTimer < .9) {
+//                runTimer = getRuntime();
+//                On(.4);
+//            }
+//
+//            if (runTimer > .9)
+//            {
+//                runTimer = getRuntime();
+//                touch = true;
+//            }
+//
+//        }
+//        On(0);
+//        telemetry.addData("time is " , runTimer);
+//        telemetry.update();
 
-        NoEncoders();
-        resetStartTime();
-        while (touch == false) {
-
-            On(.3);
-            runTimer = getRuntime();
-            if (runTimer > 1.4)
-            {
-                touch = true;
-            }
-
-        }
-        On(0);
-        telemetry.addData("time is " , runTimer);
-        telemetry.update();
-
-        if (0 < runTimer && runTimer < .46)
+        //low
+        //0 < runTimer && runTimer < .45
+        if (level == "low")
         {
-            telemetry.addData("time is now " , runTimer);
-            telemetry.addData("I am " , "lowest level");
-            telemetry.update();
-//            Thread.sleep(3000);
-
-            //Past Cheese platter
-            StrifeLeft(1450 , .3);
-            Thread.sleep(100);
-
-            //Different
-            Forward(3000 , .3);
-            Thread.sleep(100);
-
-            StrifeRight(1100 , .3);
-            Thread.sleep(100);
-
-            //Different
-//            PlaceLow();
-        }
-
-        if (.46 < runTimer && runTimer < .7)
-        {
-            telemetry.addData("time is now " , runTimer);
-            telemetry.addData("I am " , "middle level");
-            telemetry.update();
-//            Thread.sleep(3000);
-
-            //Past Cheese platter
-            StrifeLeft(1450 , .3);
-            Thread.sleep(100);
-
-            //Different
-            Forward(2800 , .3);
-
-
-            StrifeRight(1100 , .3);
-
-//            //Different
-//            PlaceMiddle();
-        }
-        if (.7 < runTimer && runTimer < 1.5)
-        {
-            telemetry.addData("time is now " , runTimer);
-            telemetry.addData("I am " , "highest level");
-            telemetry.update();
-//            Thread.sleep(3000);
-
-            //Past Cheese platter
-            StrifeLeft(1450 , .3);
-
-            //Different
-            Forward(2400 , .3);
-
-            StrifeRight(1100 , .3);
+//            telemetry.addData("time is now " , runTimer);
+//            telemetry.addData("I am " , "lowest level");
+//            telemetry.update();
+////            Thread.sleep(3000);
+//
+//            //Past Cheese platter
+//            StrifeLeft(1260 , .3);
+//            Thread.sleep(100);
 //
 //            //Different
-//            PlaceHigh();
+//            Forward(2500 , .8);
+//            Thread.sleep(100);
+//
+//            StrifeRight(1230 , .3);
+//            Thread.sleep(100);
+
+            //Different
+            PlaceLow();
+            Thread.sleep(1500);
+            Backward(300 , .5);
+            Drop();
+            Thread.sleep(1300);
+            Forward(300 , .5);
+            Reset();
         }
 
-//        Thread.sleep(5000);
+        //middle
+        //.45 < runTimer && runTimer < .9
+        if (level == "middle")
+        {
+//            telemetry.addData("time is now " , runTimer);
+//            telemetry.addData("I am " , "middle level");
+//            telemetry.update();
+////            Thread.sleep(3000);
+//
+//            //Past Cheese platter
+//            StrifeLeft(1260 , .3);
+//            Thread.sleep(100);
+//
+//            //Different
+//            Forward(2400 , .8);
+//
+//
+//            StrifeRight(1230 , .3);
 
+//            //Different
+            PlaceMiddle();
+            Thread.sleep(1500);
+            Backward(325 , .5);
+            Drop();
+            Thread.sleep(1300);
+            Forward(300 , .5);
+            Reset();
+        }
 
-//        TurnLeft(750 , .3);
-//        Thread.sleep(100);
-//        Backward(800 , .3);
-//        Thread.sleep(100);
-//        StrifeRight(400 , .3);
-//        Thread.sleep(100);
-//        TurnRight(100 , .3);
-//        Thread.sleep(100);
-//        StrifeRight(200 , .3);
-//        Thread.sleep(100);
+        //high
+        //.9 < runTimer
+        if (level == "")
+        {
+//            telemetry.addData("time is now " , runTimer);
+//            telemetry.addData("I am " , "highest level");
+//            telemetry.update();
+////            Thread.sleep(3000);
+//
+//            //Past Cheese platter
+//            StrifeLeft(1260 , .3);
+//
+//            //Different
+//            Forward(2400 , .8);
+//
+//            StrifeRight(1230 , .3);
+//
+//            //Different
+            PlaceHigh();
+            Thread.sleep(1500);
+            Backward(470 , .5);
+            Drop();
+            Thread.sleep(1300);
+            Forward(300 , .5);
+            Reset();
+        }
 
-
-//        TurnLeft(320 , .2);
-//        Thread.sleep(100);
-//        StrifeRight(930 , .3);
-//        Thread.sleep(100);
-//        Backward(100 , .2);
-//        Thread.sleep(100);
-//        StrifeRight(120 , .3);
-//        Thread.sleep(100);
-        //More
-//        Backward(40 , .2);
-//        Thread.sleep(100);
+        TurnLeft(920 , .5);
+        Thread.sleep(100);
+        StrifeRight(900 , .5);
+        Thread.sleep(100);
+        Forward(2000 , .8);
+        Thread.sleep(100);
 
 
 
@@ -303,8 +336,8 @@ public class RedLeft extends LinearOpMode {
 
         Thread.sleep(400);
 
-        RedLeft.Arm initial = new RedLeft.Arm("First");
-        initial.moveArm(.73, .27);
+        RedLeft.Arm movePlease = new RedLeft.Arm("First");
+        movePlease.moveArm(.14 , .86);
 
         aB.setPosition(.65);
 
@@ -312,14 +345,15 @@ public class RedLeft extends LinearOpMode {
 
         aB.setPosition(.34);
 
-        Thread.sleep(600);
+        Thread.sleep(700);
 
-        iT.setTargetPosition(0);
-        iT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        iT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        iT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        iT.setTargetPosition(400);
-        iT.setPower(.4);
+        RedLeft.Rail moveR = new RedLeft.Rail("Second");
+        moveR.moveRail(400 , .4);
+
+//                iT.setTargetPosition(400);
+//                iT.setPower(.4);
+
+        telemetry.addData("iT position" , iT.getTargetPosition());
     }
 
     public void PlaceMiddle() throws InterruptedException {
@@ -327,8 +361,8 @@ public class RedLeft extends LinearOpMode {
 
         Thread.sleep(100);
 
-        RedLeft.Arm initial = new RedLeft.Arm("First");
-        initial.moveArm(.73, .27);
+        RedLeft.Arm movePlease = new RedLeft.Arm("First");
+        movePlease.moveArm(.32 , .68);
 
         aB.setPosition(.65);
 
@@ -336,14 +370,10 @@ public class RedLeft extends LinearOpMode {
 
         aB.setPosition(.52);
 
-        Thread.sleep(600);
+        Thread.sleep(700);
 
-        iT.setTargetPosition(0);
-        iT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        iT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        iT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        iT.setTargetPosition(400);
-        iT.setPower(.4);
+        RedLeft.Rail moveR = new RedLeft.Rail("Second");
+        moveR.moveRail(400 , .4);
     }
 
     public void PlaceLow() throws InterruptedException {
@@ -351,33 +381,36 @@ public class RedLeft extends LinearOpMode {
 
         Thread.sleep(100);
 
-        RedLeft.Arm initial = new RedLeft.Arm("First");
-        initial.moveArm(.73, .27);
+        RedLeft.Arm movePlease = new RedLeft.Arm("First");
+        movePlease.moveArm(.4 , .6);
 
         aB.setPosition(.65);
 
-        Thread.sleep(600);
+        Thread.sleep(700);
 
-        iT.setTargetPosition(0);
-        iT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        iT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        iT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        iT.setTargetPosition(400);
-        iT.setPower(.4);
+        RedLeft.Rail moveR = new RedLeft.Rail("Second");
+        moveR.moveRail(400 , .4);
+
+        Thread.sleep(400);
+
+        movePlease.moveArm(.5 , .5);
     }
 
-    public void Reset() throws InterruptedException {
+    public void Reset() throws InterruptedException
+    {
+        RedLeft.Arm movePlease = new RedLeft.Arm("First");
+        movePlease.moveArm(.4 , .6);
+
+        Thread.sleep(400);
+
+        telemetry.addData("Position" , iT.getCurrentPosition());
+
         iT.setTargetPosition(0);
-        iT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        iT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        iT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        iT.setTargetPosition(-400);
         iT.setPower(.4);
 
-        Thread.sleep(1000);
+        Thread.sleep(400);
 
-        RedLeft.Arm initial = new RedLeft.Arm("First");
-        initial.moveArm(.73, .27);
+        movePlease.moveArm(.73 , .27);
 
         aB.setPosition(1);
     }
@@ -422,7 +455,7 @@ public class RedLeft extends LinearOpMode {
     {
         fL.setPower(-power);
         fR.setPower(-power);
-        bL.setPower(-power + .22);
+        bL.setPower(-power);
         bR.setPower(-power);
     }
 
