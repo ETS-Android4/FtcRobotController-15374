@@ -59,6 +59,7 @@ public class BlueRight extends LinearOpMode {
     //    NormalizedColorSensor cS;
     TouchSensor tS;
     View relativeLayout;
+    String level = "";
 
     float[] hsvValues = new float[3];
     float gain = 4;
@@ -101,6 +102,22 @@ public class BlueRight extends LinearOpMode {
             a2.setPosition(arm2);
 
             armLoop = false;
+        }
+    }
+
+    public class Rail extends Thread{
+        private Thread t;
+        private String threadName;
+
+        Rail (String name){
+            threadName = name;
+            System.out.println("Creating" + threadName);
+        }
+
+        public void moveRail (int position , double power)
+        {
+            iT.setTargetPosition(position);
+            iT.setPower(.4);
         }
     }
 
@@ -156,87 +173,81 @@ public class BlueRight extends LinearOpMode {
 
         //failsafe for missing block
 
-        Forward(800 , .3);
+        Forward(450, .3);
         Thread.sleep(100);
 
         hit.setPosition(1);
         Thread.sleep(500);
 
-        TurnRight(400 , .3);
+        TurnRight(400, .3);
         Thread.sleep(200);
-        StrifeRight(1100 , .6);
+        Forward(300, .4);
+        Thread.sleep(200);
+        //1100 , 1300
+        //To duck spinner
+        StrifeRight(1100, .6);
         Thread.sleep(200);
         dM.setPower(.6);
+        //2800 3200
         Thread.sleep(2800);
         dM.setPower(0);
         Thread.sleep(200);
 
-        StrifeLeft(750 , .4);
+        //Away from duck spinner
+        StrifeLeft(630, .4);
         Thread.sleep(200);
-        TurnRight(440 , .4);
+        TurnRight(455, .4);
         Thread.sleep(200);
-        StrifeLeft(800 , .4);
-        Thread.sleep(200);
-        Backward(4800 , .4);
+        //4800 5400
+        Backward(1800, .4);
         Thread.sleep(100);
-//        Forward(100 , .3);
-//        Thread.sleep(2000);
 
-        StrifeLeft(1020 , .4);
-        Thread.sleep(2000);
-//        Backward(90 , .4);
-//        Thread.sleep(100);
+        TurnRight(860, .4);
+        Thread.sleep(100);
 
-        //1 .37 , .37 , .37
-        //2 .6 , .6 , .6
-        //3 .8 , .8 , .8
-
-        NoEncoders();
-        resetStartTime();
-        while (touch == false) {
-
-            On(.3);
-            if (runTimer > .7)
-            {
-                touch = true;
-            }
-
-        }
-        On(0);
-        telemetry.addData("time is " , getRuntime());
-        telemetry.update();
-        runTimer = getRuntime();
-
-
-        if (runTimer < .46);
-        {
-            StrifeLeft(1400 , .3);
-
+        //low
+        if (level == "low") {
             //Different
-//            Forward(1800 , .3);
-//
-//            StrifeRight(500 , .3);
-//
-//            //Different
-//            PlaceLow();
+            PlaceLow();
+            Thread.sleep(1500);
+            Backward(270, .5);
+            Drop();
+            Thread.sleep(1300);
+            Forward(300, .5);
+            Reset();
         }
-        if (.46 < runTimer && runTimer < .7)
-        {
-            StrifeLeft(1400 , .3);
 
+        //middle
+        if (level == "middle") {
             //Different
-//            Forward(1500 , .3);
-//
-//            StrifeRight(500 , .3);
-//
-//            //Different
-//            PlaceMiddle();
+            PlaceMiddle();
+            Thread.sleep(1500);
+            Backward(210, .5);
+            Drop();
+            Thread.sleep(1300);
+            Forward(300, .5);
+            Reset();
         }
-        if (.7 < runTimer && runTimer < 1)
-        {
-            StrifeLeft(1400, .3);
 
+        //high
+        if (level == "")
+        {
+           //Different
+            PlaceHigh();
+            Thread.sleep(1500);
+            Backward(210, .5);
+            Drop();
+            Thread.sleep(1300);
+            Forward(300, .5);
+            Reset();
         }
+
+        TurnLeft(860 , .5);
+        Thread.sleep(100);
+        StrifeRight(1050 , .5);
+        Thread.sleep(100);
+        Backward(2300 , .8);
+        Thread.sleep(100);
 
 
 
@@ -247,8 +258,8 @@ public class BlueRight extends LinearOpMode {
 
         Thread.sleep(400);
 
-        BlueRight.Arm initial = new BlueRight.Arm("First");
-        initial.moveArm(.73, .27);
+        BlueRight.Arm movePlease = new BlueRight.Arm("First");
+        movePlease.moveArm(.14 , .86);
 
         aB.setPosition(.65);
 
@@ -256,14 +267,12 @@ public class BlueRight extends LinearOpMode {
 
         aB.setPosition(.34);
 
-        Thread.sleep(600);
+        Thread.sleep(700);
 
-        iT.setTargetPosition(0);
-        iT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        iT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        iT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        iT.setTargetPosition(400);
-        iT.setPower(.4);
+        BlueRight.Rail moveR = new BlueRight.Rail("Second");
+        moveR.moveRail(400 , .4);
+
+        telemetry.addData("iT position" , iT.getTargetPosition());
     }
 
     public void PlaceMiddle() throws InterruptedException {
@@ -271,8 +280,8 @@ public class BlueRight extends LinearOpMode {
 
         Thread.sleep(100);
 
-        BlueRight.Arm initial = new BlueRight.Arm("First");
-        initial.moveArm(.73, .27);
+        BlueRight.Arm movePlease = new BlueRight.Arm("First");
+        movePlease.moveArm(.32 , .68);
 
         aB.setPosition(.65);
 
@@ -280,14 +289,10 @@ public class BlueRight extends LinearOpMode {
 
         aB.setPosition(.52);
 
-        Thread.sleep(600);
+        Thread.sleep(700);
 
-        iT.setTargetPosition(0);
-        iT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        iT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        iT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        iT.setTargetPosition(400);
-        iT.setPower(.4);
+        BlueRight.Rail moveR = new BlueRight.Rail("Second");
+        moveR.moveRail(400 , .4);
     }
 
     public void PlaceLow() throws InterruptedException {
@@ -295,19 +300,19 @@ public class BlueRight extends LinearOpMode {
 
         Thread.sleep(100);
 
-        BlueRight.Arm initial = new BlueRight.Arm("First");
-        initial.moveArm(.73, .27);
+        BlueRight.Arm movePlease = new BlueRight.Arm("First");
+        movePlease.moveArm(.4 , .6);
 
         aB.setPosition(.65);
 
-        Thread.sleep(600);
+        Thread.sleep(700);
 
-        iT.setTargetPosition(0);
-        iT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        iT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        iT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        iT.setTargetPosition(400);
-        iT.setPower(.4);
+        BlueRight.Rail moveR = new BlueRight.Rail("Second");
+        moveR.moveRail(400 , .4);
+
+        Thread.sleep(400);
+
+        movePlease.moveArm(.5 , .5);
     }
 
     public void Reset() throws InterruptedException {
