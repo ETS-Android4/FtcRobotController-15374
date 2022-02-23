@@ -28,88 +28,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
 @Autonomous (name = "BlueVisionCheesePlatterPark")
 public class BlueVisionDuck extends LinearOpMode {
 
-    private static final String VUFORIA_KEY =
-            "AUdem3D/////AAABmepzp1egIUCrnwRIbLuIVvIirZfrE6yO7yzl+4nX/cpFIvNXDph8rw66qfFZeX9QxP9gGNKTb26GubTBXLFPVrX/pKaNdcDrPCesrpE49iDgtcv4Rg59w0TwWVOrZo7h1WYKRw80AX0nutNBklVVGb2s7Liey79NqXcHY8a0Wwz5+2MjMb9XXoqPrIGJ2Wj+dDpvfItvhFpIVuaFkBR0VFGD9VuTJ7l2iBLa+57q6KDkC1qomNAM5UwN8u+HzA3RmxP+JCTaIIwQmO6IyeTxGiTcfHXMlExAQI9u7uHjFQtub4aOJ5v0I5MZDH1Q4U6mORm/9/pDNm5YnEY2UGqbEyOHdY5DGLpZmcRE/FsE+3bq";
-
-    DcMotor fL = null;
-    DcMotor fR = null;
-    DcMotor bL = null;
-    DcMotor bR = null;
-    DcMotor iT = null;
-    DcMotor dM = null;
-    DcMotor iM = null;
-
-    Servo a1 = null;
-    Servo a2 = null;
-    Servo aB = null;
-    Servo i1 = null;
-    Servo i2 = null;
-    Servo hit = null;
-
-    //    NormalizedColorSensor cS;
-    TouchSensor tS;
-    View relativeLayout;
-
-    float[] hsvValues = new float[3];
-    float gain = 4;
-    boolean xButtonCurrentlyPressed;
-    boolean xButtonPreviouslyPressed;
-
-    AnalogInput potent = null;
-    double number = .48;
-    double position = .7;
-    boolean armLoop = true;
-    double runTimer = 0;
-    String level = "";
-
-    // Since ImageTarget trackables use mm to specifiy their dimensions, we must use mm for all the physical dimension.
-    // We will define some constants and conversions here
-    private static final float mmPerInch = 25.4f;
-    private static final float mmTargetHeight = 6 * mmPerInch;          // the height of the center of the target image above the floor
-    private static final float halfField = 72 * mmPerInch;
-    private static final float halfTile = 12 * mmPerInch;
-    private static final float oneAndHalfTile = 36 * mmPerInch;
-
-    // Class Members
-    private OpenGLMatrix lastLocation = null;
-    private VuforiaLocalizer vuforia = null;
-    private VuforiaTrackables targets = null;
-    private WebcamName webcamName = null;
-
-    private boolean targetVisible = false;
-
-    public class Arm extends Thread {
-        private Thread t;
-        private String threadName;
-
-        Arm(String name) {
-            threadName = name;
-            System.out.println("Creating" + threadName);
-        }
-
-        public void moveArm(double arm1, double arm2) {
-            a1.setPosition(arm1);
-            a2.setPosition(arm2);
-
-            armLoop = false;
-        }
-    }
-
-    public class Rail extends Thread {
-        private Thread t;
-        private String threadName;
-
-        Rail(String name) {
-            threadName = name;
-            System.out.println("Creating" + threadName);
-        }
-
-        public void moveRail(int position, double power) {
-            iT.setTargetPosition(position);
-            iT.setPower(.4);
-        }
-    }
-        OpenCvWebcam webcam = null;
+    OpenCvWebcam webcam = null;
 
     public void init2(){
         WebcamName webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
@@ -201,6 +120,87 @@ public class BlueVisionDuck extends LinearOpMode {
 
     }
 
+    private static final String VUFORIA_KEY =
+            "AUdem3D/////AAABmepzp1egIUCrnwRIbLuIVvIirZfrE6yO7yzl+4nX/cpFIvNXDph8rw66qfFZeX9QxP9gGNKTb26GubTBXLFPVrX/pKaNdcDrPCesrpE49iDgtcv4Rg59w0TwWVOrZo7h1WYKRw80AX0nutNBklVVGb2s7Liey79NqXcHY8a0Wwz5+2MjMb9XXoqPrIGJ2Wj+dDpvfItvhFpIVuaFkBR0VFGD9VuTJ7l2iBLa+57q6KDkC1qomNAM5UwN8u+HzA3RmxP+JCTaIIwQmO6IyeTxGiTcfHXMlExAQI9u7uHjFQtub4aOJ5v0I5MZDH1Q4U6mORm/9/pDNm5YnEY2UGqbEyOHdY5DGLpZmcRE/FsE+3bq";
+
+    DcMotor fL = null;
+    DcMotor fR = null;
+    DcMotor bL = null;
+    DcMotor bR = null;
+    DcMotor iT = null;
+    DcMotor dM = null;
+    DcMotor iM = null;
+
+    Servo a1 = null;
+    Servo a2 = null;
+    Servo aB = null;
+    Servo i1 = null;
+    Servo i2 = null;
+    Servo hit = null;
+
+    //    NormalizedColorSensor cS;
+    TouchSensor tS;
+    View relativeLayout;
+
+    float[] hsvValues = new float[3];
+    float gain = 4;
+    boolean xButtonCurrentlyPressed;
+    boolean xButtonPreviouslyPressed;
+
+    AnalogInput potent = null;
+    double number = .48;
+    double position = .7;
+    boolean armLoop = true;
+    double runTimer = 0;
+    String level = "";
+
+    // Since ImageTarget trackables use mm to specifiy their dimensions, we must use mm for all the physical dimension.
+    // We will define some constants and conversions here
+    private static final float mmPerInch = 25.4f;
+    private static final float mmTargetHeight = 6 * mmPerInch;          // the height of the center of the target image above the floor
+    private static final float halfField = 72 * mmPerInch;
+    private static final float halfTile = 12 * mmPerInch;
+    private static final float oneAndHalfTile = 36 * mmPerInch;
+
+    // Class Members
+    private OpenGLMatrix lastLocation = null;
+    private VuforiaLocalizer vuforia = null;
+    private VuforiaTrackables targets = null;
+    private WebcamName webcamName = null;
+
+    private boolean targetVisible = false;
+
+    public class Arm extends Thread {
+        private Thread t;
+        private String threadName;
+
+        Arm(String name) {
+            threadName = name;
+            System.out.println("Creating" + threadName);
+        }
+
+        public void moveArm(double arm1, double arm2) {
+            a1.setPosition(arm1);
+            a2.setPosition(arm2);
+
+            armLoop = false;
+        }
+    }
+
+    public class Rail extends Thread {
+        private Thread t;
+        private String threadName;
+
+        Rail(String name) {
+            threadName = name;
+            System.out.println("Creating" + threadName);
+        }
+
+        public void moveRail(int position, double power) {
+            iT.setTargetPosition(position);
+            iT.setPower(.4);
+        }
+    }
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -246,6 +246,8 @@ public class BlueVisionDuck extends LinearOpMode {
 
         boolean touch = tS.isPressed();
 
+        init2();
+
         waitForStart();
 
         //failsafe for missing block
@@ -266,8 +268,6 @@ public class BlueVisionDuck extends LinearOpMode {
         Thread.sleep(800);
         StrifeRight(1300 , .3);
         Thread.sleep(300);
-
-        init2();
 
         //ONE == the left position
         if(VisionPipeline.position == VisionPipeline.thingPos.ONE)
